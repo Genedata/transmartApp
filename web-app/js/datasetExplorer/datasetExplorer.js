@@ -1,4 +1,3 @@
-
 String.prototype.trim = function() {
 	return this.replace(/^\s\s*/, '').replace(/\s\s*$/, '');
 }
@@ -45,29 +44,32 @@ function setDataAssociationAvailableFlag(el, success, response, options) {
 	} else {
 		Ext.Ajax.request(
 		{
-			url : pageInfo.basePath+"/dataAssociation/loadScripts",
-				method : 'GET',
-				timeout: '600000',
-				params :  Ext.urlEncode({}),
-				success : function(result, request)
-				{
-					var exp = result.responseText.evalJSON();
-					if (exp.success && exp.files.length > 0)	{
-						/*for (var i = 0; i < exp.files.length; i++) {
-							var file = exp.files[i]
-							if (file.type == 'script') {
-
-							}
-						}*/
-						loadScripts(exp.files);
-					}
-				},
-				failure : function(result, request)
-				{
-					alert("Unable to process the export: " + result.responseText);
-				}
+			url: pageInfo.basePath + "/dataAssociation/loadScripts",
+			method: 'GET',
+			timeout: '600000',
+			params: Ext.urlEncode({}),
+			success: function (result, request) {
+				var exp = result.responseText.evalJSON();
+				loadScripts(exp.files);
+			},
+			failure: function (result, request) {
+				alert("Unable to process the export: " + result.responseText);
+			}
 		});
 	}
+
+	Ext.Ajax.request({
+		url: pageInfo.basePath + "/gexAnalysis/loadScripts",
+		method: 'GET',
+		timeout: '600000',
+		success: function(result, request) {
+			var exp = result.responseText.evalJSON();
+			loadScripts(exp.files)
+		},
+		failure: function(result, request) {
+			alert("Failted to retrieve Analyst plugin scripts.")
+		}
+	})
 }
 
 /**
